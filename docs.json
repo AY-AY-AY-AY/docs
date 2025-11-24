@@ -11,7 +11,8 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "API reference",
+        "tab": "API Reference",
+        "icon": "code",
         "groups": [
           {
             "group": "Overview",
