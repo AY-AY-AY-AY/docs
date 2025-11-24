@@ -1,54 +1,165 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "title": "AthenaHQ API",
+    "description": "AthenaHQ API provides programmatic access to manage your websites and prompts for AI-powered content optimization.",
+    "version": "1.0.0",
+    "contact": {
+      "email": "support@athenahq.ai"
+    },
     "license": {
       "name": "MIT"
-    },
-    "version": "1.0.0"
+    }
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.athenahq.ai",
+      "description": "Production server"
     }
   ],
   "security": [
     {
-      "bearerAuth": []
+      "apiKey": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Basics",
+      "description": "Core API operations for managing websites and prompts"
     }
   ],
   "paths": {
-    "/plants": {
+    "/api/v1/websites": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "tags": ["Basics"],
+        "summary": "List websites",
+        "description": "Returns all active websites associated with your API key.",
+        "operationId": "getWebsites",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with list of websites",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "websites": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Website"
+                      }
+                    }
+                  },
+                  "required": ["websites"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prompts": {
+      "get": {
+        "tags": ["Basics"],
+        "summary": "List prompts",
+        "description": "Returns all prompts for a specific website. You can optionally filter by status (active or paused). The prompts returned include metadata such as monthly search volume and total value.",
+        "operationId": "getPrompts",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
         "parameters": [
           {
-            "name": "limit",
+            "name": "website_id",
             "in": "query",
-            "description": "The maximum number of results to return",
+            "description": "The ID of the website to retrieve prompts for",
+            "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter prompts by status. If omitted, returns both active and paused prompts.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["active", "paused"]
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "Successful response with list of prompts",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
+                  "type": "object",
+                  "properties": {
+                    "prompts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Prompt"
+                      }
+                    }
+                  },
+                  "required": ["prompts"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id is required"
+                    }
+                  },
+                  "invalid_status": {
+                    "value": {
+                      "error": "status must be 'active' or 'paused'"
+                    }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Unexpected error",
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
             "content": {
               "application/json": {
                 "schema": {
@@ -56,35 +167,22 @@
                 }
               }
             }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
           },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
                 }
               }
             }
           },
-          "400": {
-            "description": "unexpected error",
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -92,61 +190,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
           }
         }
       }
@@ -154,63 +197,96 @@
   },
   "components": {
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      "Website": {
         "type": "object",
+        "description": "A website resource in AthenaHQ",
+        "required": ["id", "websiteName", "websiteUrl"],
         "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the website",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
+          "websiteName": {
+            "type": "string",
+            "description": "Display name of the website",
+            "example": "My Awesome Blog"
+          },
+          "websiteUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "The URL of the website",
+            "example": "example.com"
           }
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+      "Prompt": {
+        "type": "object",
+        "description": "A prompt resource for AI-powered content generation",
+        "required": ["id", "prompt", "status", "country"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the prompt",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
           },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
+          "prompt": {
+            "type": "string",
+            "description": "The prompt text used for content generation",
+            "example": "How to optimize website performance"
+          },
+          "topic_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "The name of the topic category this prompt belongs to",
+            "example": "Web Development"
+          },
+          "current_monthly_searches": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Estimated monthly search volume for this prompt",
+            "example": 5400
+          },
+          "current_total_value": {
+            "type": "number",
+            "nullable": true,
+            "description": "Estimated total value of traffic for this prompt",
+            "example": 1250.50
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "paused"],
+            "description": "Current status of the prompt",
+            "example": "active"
+          },
+          "country": {
+            "type": "string",
+            "description": "Target country for the prompt",
+            "example": "United States"
           }
-        ]
+        }
       },
       "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
         "type": "object",
+        "description": "Error response object",
+        "required": ["error"],
         "properties": {
           "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
+            "type": "string",
+            "description": "Error message describing what went wrong",
+            "example": "Unauthorized"
           }
         }
       }
     },
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "API key for authentication. You can create one [here](https://app.athenahq.ai/organization?tab=api)."
       }
     }
   }
