@@ -13,6 +13,7 @@
       {
         "tab": "API Reference",
         "icon": "code",
+        "openapi": "api-reference/openapi.json",
         "groups": [
           {
             "group": "Overview",
@@ -23,10 +24,11 @@
             ]
           },
           {
-            "group": "API Endpoints",
-            "openapi": {
-              "source": "api-reference/openapi.json"
-            }
+            "group": "Basics",
+            "pages": [
+              "GET /api/v1/websites",
+              "GET /api/v1/prompts"
+            ]
           }
         ]
       }

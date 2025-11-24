@@ -32,7 +32,7 @@
     "/api/v1/websites": {
       "get": {
         "tags": ["Basics"],
-        "summary": "List websites",
+        "summary": "List Websites",
         "description": "Returns all active websites associated with your API key.",
         "operationId": "getWebsites",
         "security": [
@@ -86,7 +86,7 @@
     "/api/v1/prompts": {
       "get": {
         "tags": ["Basics"],
-        "summary": "List prompts",
+        "summary": "List Prompts",
         "description": "Returns all prompts for a specific website. You can optionally filter by status (active or paused). The prompts returned include metadata such as monthly search volume and total value.",
         "operationId": "getPrompts",
         "security": [
