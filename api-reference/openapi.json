@@ -193,6 +193,98 @@
           }
         }
       }
+    },
+    "/api/v1/competitors": {
+      "get": {
+        "tags": ["Basics"],
+        "summary": "Get Competitors",
+        "description": "Returns all competitors for a specific website.",
+        "operationId": "getCompetitors",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "website_id",
+            "in": "query",
+            "description": "The ID of the website to retrieve competitors for",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with list of competitors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "competitors": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Competitor"
+                      }
+                    }
+                  },
+                  "required": ["competitors"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "website_id is required"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -265,6 +357,42 @@
             "type": "string",
             "description": "Target country for the prompt",
             "example": "United States"
+          }
+        }
+      },
+      "Competitor": {
+        "type": "object",
+        "description": "A competitor resource in AthenaHQ",
+        "required": ["id", "name", "url", "normalized_url", "identifiers"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the competitor",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the competitor",
+            "example": "Competitor Inc"
+          },
+          "url": {
+            "type": "string",
+            "description": "The URL of the competitor website",
+            "example": "competitor.com"
+          },
+          "normalized_url": {
+            "type": "string",
+            "description": "Normalized URL of the competitor website",
+            "example": "competitor.com"
+          },
+          "identifiers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of identifiers associated with this competitor",
+            "example": ["Competitor Inc", "competitor.com"]
           }
         }
       },

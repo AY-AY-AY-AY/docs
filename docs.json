@@ -27,7 +27,8 @@
             "group": "Basics",
             "pages": [
               "GET /api/v1/websites",
-              "GET /api/v1/prompts"
+              "GET /api/v1/prompts",
+              "GET /api/v1/competitors"
             ]
           }
         ]
