@@ -252,7 +252,7 @@
           "current_total_value": {
             "type": "number",
             "nullable": true,
-            "description": "Estimated total value of traffic for this prompt",
+            "description": "Estimated total monthly value for this prompt",
             "example": 1250.50
           },
           "status": {
