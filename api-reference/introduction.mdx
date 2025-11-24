@@ -1,34 +1,25 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Programmatically interact and integrate with AthenaHQ'
 icon: 'book'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## AthenaHQ API
 
-## Welcome
-
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+The AthenaHQ API enables programmatic and scalable interaction with the AthenaHQ platform. Build custom integrations, automate workflows, and extend AthenaHQ's capabilities to meet your organization's specific needs.
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API requests require authentication using an API key. API keys are managed through your organization's dashboard and can be scoped to specific websites for granular access control.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+<Card
+  title="Create API Keys"
+  icon="key"
+  href="https://app.athenahq.ai/organization?tab=api"
+>
+  Generate and manage API keys in your organization settings
+</Card>
+
+<Info>
+  For detailed information about authentication methods and API key management, see the [Authentication](/api-reference/authentication) documentation.
+</Info>

@@ -1,34 +1,20 @@
 ---
 title: 'Rate Limits'
-description: 'Example section for showcasing API endpoints'
+description: 'API rate limits and availability'
 icon: 'gauge'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Rate Limits
 
-## Welcome
+The AthenaHQ API enforces the following rate limits:
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+- **100 requests per minute** per API key
+- **No limit** on total number of requests
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+Rate limits are enforced on a per-API-key basis. If you exceed the rate limit, subsequent requests will be rejected until the rate limit window resets.
 
-## Authentication
+## API Availability
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
-
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+<Warning>
+  The AthenaHQ API is available exclusively for Enterprise accounts as an add-on feature. Contact your account manager to enable API access for your organization.
+</Warning>

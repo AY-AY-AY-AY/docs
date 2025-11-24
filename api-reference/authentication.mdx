@@ -1,34 +1,39 @@
 ---
 title: 'Authentication'
-description: 'Example section for showcasing API endpoints'
+description: 'Authenticate API requests using API keys'
 icon: 'key'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## API Key Authentication
 
-## Welcome
+All API requests must include an API key in the request headers. API keys are passed using the `x-api-key` header.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+```bash
+curl https://api.athenahq.ai/v1/endpoint \
+  -H "x-api-key: your_api_key_here"
+```
+
+## Creating API Keys
+
+API keys can be created and managed through your organization's dashboard.
 
 <Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+  title="Manage API Keys"
+  icon="key"
+  href="https://app.athenahq.ai/organization?tab=api"
 >
-  View the OpenAPI specification file
+  Create, view, and manage API keys in your organization settings
 </Card>
 
-## Authentication
+## API Key Scoping
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+API keys belong to an organization and can be scoped to specific websites within that organization. This allows for granular access control when managing multiple websites under a single organization.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+- Each API key is associated with an organization
+- Organizations can contain multiple websites
+- API keys can be scoped to one or more specific websites
+- Scoped API keys only have access to data from their assigned websites
+
+<Warning>
+  Only organization administrators can create, edit, or delete API keys. Ensure you have the appropriate permissions before attempting to manage API keys.
+</Warning>
