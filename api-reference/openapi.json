@@ -33,7 +33,7 @@
       "get": {
         "tags": ["Basics"],
         "summary": "List websites",
-        "description": "Returns all active websites associated with your API key. The websites returned are filtered by organization ID and the websites your API key has access to.",
+        "description": "Returns all active websites associated with your API key.",
         "operationId": "getWebsites",
         "security": [
           {
