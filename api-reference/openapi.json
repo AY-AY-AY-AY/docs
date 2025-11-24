@@ -29,7 +29,7 @@
     }
   ],
   "paths": {
-    "/v1/websites": {
+    "/api/v1/websites": {
       "get": {
         "tags": ["Basics"],
         "summary": "List websites",
@@ -83,7 +83,7 @@
         }
       }
     },
-    "/v1/prompts": {
+    "/api/v1/prompts": {
       "get": {
         "tags": ["Basics"],
         "summary": "List prompts",
@@ -286,7 +286,7 @@
         "type": "apiKey",
         "in": "header",
         "name": "x-api-key",
-        "description": "API key for authentication. You can generate an API key from your AthenaHQ dashboard at https://app.athenahq.ai/organization?tab=api"
+        "description": "API key for authentication. You can create one [here](https://app.athenahq.ai/organization?tab=api)."
       }
     }
   }
