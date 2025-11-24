@@ -1,0 +1,39 @@
+---
+title: 'Authentication'
+description: 'Authenticate API requests using API keys'
+icon: 'key'
+---
+
+## API Key Authentication
+
+All API requests must include an API key in the request headers. API keys are passed using the `x-api-key` header.
+
+```bash
+curl https://api.athenahq.ai/v1/endpoint \
+  -H "x-api-key: your_api_key_here"
+```
+
+## Creating API Keys
+
+API keys can be created and managed through your organization's dashboard.
+
+<Card
+  title="Manage API Keys"
+  icon="key"
+  href="https://app.athenahq.ai/organization?tab=api"
+>
+  Create, view, and manage API keys in your organization settings
+</Card>
+
+## API Key Scoping
+
+API keys belong to an organization and can be scoped to specific websites within that organization. This allows for granular access control when managing multiple websites under a single organization.
+
+- Each API key is associated with an organization
+- Organizations can contain multiple websites
+- API keys can be scoped to one or more specific websites
+- Scoped API keys only have access to data from their assigned websites
+
+<Warning>
+  Only organization administrators can create, edit, or delete API keys. Ensure you have the appropriate permissions before attempting to manage API keys.
+</Warning>
