@@ -13,6 +13,22 @@ The AthenaHQ API enforces the following rate limits:
 
 Rate limits are enforced on a per-API-key basis. If you exceed the rate limit, subsequent requests will be rejected until the rate limit window resets.
 
+## Response Headers
+
+All authenticated API responses include rate limit headers:
+
+| Header | Description |
+| ------ | ----------- |
+| `x-rate-limit-limit` | Maximum requests allowed per minute (60) |
+| `x-rate-limit-remaining` | Requests remaining in the current window |
+| `x-rate-limit-reset` | Unix timestamp (seconds) when the rate limit resets |
+
+When you exceed the rate limit (429 response), an additional header is included:
+
+| Header | Description |
+| ------ | ----------- |
+| `retry-after` | Seconds to wait before retrying |
+
 ## API Availability
 
 <Warning>
