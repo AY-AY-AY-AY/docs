@@ -404,6 +404,124 @@
           }
         }
       }
+    },
+    "/api/v1/responses": {
+      "post": {
+        "tags": ["Basics"],
+        "summary": "Query Responses",
+        "description": "Returns paginated AI model responses for a website with optional filtering by date range, models, prompts, and competitors.",
+        "operationId": "queryResponses",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResponsesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with list of responses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "responses": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Response"
+                      }
+                    }
+                  },
+                  "required": ["responses"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "invalid_json": {
+                    "value": {
+                      "error": "Invalid JSON in request body"
+                    }
+                  },
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id: Required"
+                    }
+                  },
+                  "missing_filters": {
+                    "value": {
+                      "error": "filters: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website, prompts, or competitors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "unauthorized_website": {
+                    "value": {
+                      "error": "Unauthorized access to this website"
+                    }
+                  },
+                  "unauthorized_prompts": {
+                    "value": {
+                      "error": "Unauthorized access to these prompts"
+                    }
+                  },
+                  "unauthorized_competitors": {
+                    "value": {
+                      "error": "Unauthorized access to these competitors"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -524,6 +642,229 @@
             "type": "string",
             "description": "Error message describing what went wrong",
             "example": "Unauthorized"
+          }
+        }
+      },
+      "ApiFilters": {
+        "type": "object",
+        "description": "Filters for querying responses",
+        "required": ["start_date"],
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Filter start date (UTC)",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Filter end date (UTC)",
+            "example": "2024-12-31T23:59:59.999Z"
+          },
+          "models": {
+            "type": "array",
+            "description": "Filter by AI models",
+            "items": {
+              "type": "string",
+              "enum": ["chatgpt", "perplexity", "gemini", "google_ai_overview", "copilot", "claude", "ai_mode", "grok", "deepseek"]
+            },
+            "example": ["chatgpt", "perplexity"]
+          },
+          "prompt_ids": {
+            "type": "array",
+            "description": "Filter by specific prompt IDs",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "competitor_ids": {
+            "type": "array",
+            "description": "Filter by specific competitor IDs",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "prompt_status": {
+            "type": "string",
+            "enum": ["active", "paused"],
+            "description": "Filter by prompt status"
+          },
+          "prompt_type": {
+            "type": "string",
+            "enum": ["branded", "non_branded"],
+            "description": "Filter by prompt type"
+          }
+        }
+      },
+      "ResponsesRequest": {
+        "type": "object",
+        "description": "Request body for querying responses",
+        "required": ["website_id", "filters"],
+        "properties": {
+          "website_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the website to query responses for",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ApiFilters"
+          },
+          "page_num": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "description": "Page number for pagination (0-indexed)",
+            "example": 0
+          },
+          "page_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 40,
+            "description": "Number of responses per page",
+            "example": 40
+          }
+        }
+      },
+      "Source": {
+        "type": "object",
+        "description": "A source cited in an AI response",
+        "required": ["url", "root_domain"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The source URL",
+            "example": "example.com/article"
+          },
+          "normalized_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "Normalized version of the URL",
+            "example": "example.com/article"
+          },
+          "root_domain": {
+            "type": "string",
+            "description": "Root domain of the source",
+            "example": "example.com"
+          },
+          "suffix": {
+            "type": "string",
+            "nullable": true,
+            "description": "Domain suffix",
+            "example": ".com"
+          }
+        }
+      },
+      "ResponseCompetitor": {
+        "type": "object",
+        "description": "A competitor mentioned in an AI response",
+        "required": ["id", "name", "url", "position"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Competitor ID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "Competitor name",
+            "example": "Competitor Inc"
+          },
+          "url": {
+            "type": "string",
+            "description": "Competitor URL",
+            "example": "competitor.com"
+          },
+          "position": {
+            "type": "integer",
+            "description": "Position/rank of competitor mention in the response",
+            "example": 1
+          }
+        }
+      },
+      "Response": {
+        "type": "object",
+        "description": "An AI model response",
+        "required": ["id", "website_id", "prompt_id", "base_prompt", "prompt", "model", "response", "mentioned", "cited", "created_at", "sources", "competitors"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the response",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "website_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Associated website ID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "prompt_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Associated prompt ID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "base_prompt": {
+            "type": "string",
+            "description": "Original prompt text",
+            "example": "What is the best CRM software?"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Actual prompt variation used",
+            "example": "What is the best CRM software for small businesses?"
+          },
+          "model": {
+            "type": "string",
+            "description": "AI model that generated the response",
+            "example": "chatgpt"
+          },
+          "response": {
+            "type": "string",
+            "description": "The AI-generated response text",
+            "example": "Here are some top CRM options..."
+          },
+          "mentioned": {
+            "type": "boolean",
+            "description": "Whether your website was mentioned in the response",
+            "example": true
+          },
+          "position": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Your website's rank/position in the response (null if not mentioned)",
+            "example": 2
+          },
+          "cited": {
+            "type": "boolean",
+            "description": "Whether your website was cited as a source",
+            "example": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the response was captured (UTC)",
+            "example": "2024-06-15T10:30:00.000Z"
+          },
+          "sources": {
+            "type": "array",
+            "description": "Sources cited in the response",
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            }
+          },
+          "competitors": {
+            "type": "array",
+            "description": "Competitors mentioned in the response",
+            "items": {
+              "$ref": "#/components/schemas/ResponseCompetitor"
+            }
           }
         }
       }
