@@ -285,6 +285,125 @@
           }
         }
       }
+    },
+    "/api/v1/date-range": {
+      "get": {
+        "tags": ["Basics"],
+        "summary": "Get Date Range",
+        "description": "Returns the date range with available data for a website's prompts. Use this to determine the valid date range for other API queries.",
+        "operationId": "getDateRange",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "website_id",
+            "in": "query",
+            "description": "The ID of the website to retrieve the date range for",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "prompt_status",
+            "in": "query",
+            "description": "Filter by prompt status. If omitted, includes all prompts (active and paused).",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["active", "paused"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with date range",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "min_date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true,
+                      "description": "The earliest timestamp with available data (UTC)",
+                      "example": "2024-01-15T08:20:17.844Z"
+                    },
+                    "max_date": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true,
+                      "description": "The latest timestamp with available data (UTC)",
+                      "example": "2024-12-01T14:30:45.123Z"
+                    }
+                  },
+                  "required": ["min_date", "max_date"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id is required"
+                    }
+                  },
+                  "invalid_status": {
+                    "value": {
+                      "error": "prompt_status must be 'active' or 'paused'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
