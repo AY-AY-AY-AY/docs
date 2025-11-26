@@ -45,13 +45,6 @@
                 ]
               },
               {
-                "group": "Position",
-                "pages": [
-                  "POST /api/v1/metrics/position/cumulative",
-                  "POST /api/v1/metrics/position/time-series"
-                ]
-              },
-              {
                 "group": "Mention Rate",
                 "pages": [
                   "POST /api/v1/metrics/mention-rate/cumulative",
@@ -63,6 +56,13 @@
                 "pages": [
                   "POST /api/v1/metrics/citation-rate/cumulative",
                   "POST /api/v1/metrics/citation-rate/time-series"
+                ]
+              },
+              {
+                "group": "Position",
+                "pages": [
+                  "POST /api/v1/metrics/position/cumulative",
+                  "POST /api/v1/metrics/position/time-series"
                 ]
               }
             ]
