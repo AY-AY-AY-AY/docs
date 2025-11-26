@@ -26,6 +26,10 @@
     {
       "name": "Basics",
       "description": "Core API operations for managing websites and prompts"
+    },
+    {
+      "name": "Metrics",
+      "description": "Metrics and analytics endpoints for tracking AI visibility"
     }
   ],
   "paths": {
@@ -522,6 +526,261 @@
           }
         }
       }
+    },
+    "/api/v1/metrics/share-of-voice/cumulative": {
+      "post": {
+        "tags": ["Metrics"],
+        "summary": "Cumulative Share of Voice",
+        "description": "Returns aggregated share of voice percentages across the specified date range. Shows what percentage of AI responses mention your brand versus competitors.",
+        "operationId": "getCumulativeSOV",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SOVRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with share of voice data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CumulativeSOVEntry"
+                      }
+                    }
+                  },
+                  "required": ["data"]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "name": "Acme Corp",
+                      "value": 33.3,
+                      "absolute_value": 150,
+                      "is_self": true
+                    },
+                    {
+                      "name": "Competitor Inc",
+                      "value": 26.7,
+                      "absolute_value": 120,
+                      "is_self": false
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id: Required"
+                    }
+                  },
+                  "missing_filters": {
+                    "value": {
+                      "error": "filters: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Website not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Website not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metrics/share-of-voice/time-series": {
+      "post": {
+        "tags": ["Metrics"],
+        "summary": "Share of Voice Over Time",
+        "description": "Returns daily share of voice breakdown over the specified date range. Each entry contains the date and SOV percentages for your brand and competitors.",
+        "operationId": "getTimeSeriesSOV",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SOVRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with time series data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TimeSeriesSOVEntry"
+                      }
+                    }
+                  },
+                  "required": ["data"]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "date": "2024-06-15",
+                      "Acme Corp": {
+                        "value": 33.3,
+                        "is_self": true
+                      },
+                      "Competitor Inc": {
+                        "value": 26.7,
+                        "is_self": false
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id: Required"
+                    }
+                  },
+                  "missing_filters": {
+                    "value": {
+                      "error": "filters: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Website not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Website not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -865,6 +1124,76 @@
             "items": {
               "$ref": "#/components/schemas/ResponseCompetitor"
             }
+          }
+        }
+      },
+      "CumulativeSOVEntry": {
+        "type": "object",
+        "description": "A share of voice entry showing brand/competitor visibility",
+        "required": ["name", "value", "absolute_value", "is_self"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Brand or competitor name",
+            "example": "Acme Corp"
+          },
+          "value": {
+            "type": "number",
+            "description": "Share of voice percentage (0-100)",
+            "example": 33.3
+          },
+          "absolute_value": {
+            "type": "integer",
+            "description": "Raw mention count",
+            "example": 150
+          },
+          "is_self": {
+            "type": "boolean",
+            "description": "True if this entry represents your tracked website",
+            "example": true
+          }
+        }
+      },
+      "TimeSeriesSOVEntry": {
+        "type": "object",
+        "description": "Daily share of voice data point",
+        "required": ["date"],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date in YYYY-MM-DD format",
+            "example": "2024-06-15"
+          }
+        },
+        "additionalProperties": {
+          "type": "object",
+          "description": "Company name as key with SOV data as value",
+          "properties": {
+            "value": {
+              "type": "number",
+              "description": "Share of voice percentage for this day"
+            },
+            "is_self": {
+              "type": "boolean",
+              "description": "True if this is your tracked website"
+            }
+          }
+        }
+      },
+      "SOVRequest": {
+        "type": "object",
+        "description": "Request body for share of voice endpoints",
+        "required": ["website_id", "filters"],
+        "properties": {
+          "website_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the website to query share of voice for",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ApiFilters"
           }
         }
       }

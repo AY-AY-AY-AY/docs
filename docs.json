@@ -33,6 +33,18 @@
               "GET /api/v1/date-range",
               "POST /api/v1/responses"
             ]
+          },
+          {
+            "group": "Metrics",
+            "pages": [
+              {
+                "group": "Share of Voice",
+                "pages": [
+                  "POST /api/v1/metrics/share-of-voice/cumulative",
+                  "POST /api/v1/metrics/share-of-voice/time-series"
+                ]
+              }
+            ]
           }
         ]
       }
