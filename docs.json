@@ -57,6 +57,13 @@
                   "POST /api/v1/metrics/mention-rate/cumulative",
                   "POST /api/v1/metrics/mention-rate/time-series"
                 ]
+              },
+              {
+                "group": "Citation Rate",
+                "pages": [
+                  "POST /api/v1/metrics/citation-rate/cumulative",
+                  "POST /api/v1/metrics/citation-rate/time-series"
+                ]
               }
             ]
           }

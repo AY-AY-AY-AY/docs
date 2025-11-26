@@ -1286,6 +1286,259 @@
           }
         }
       }
+    },
+    "/api/v1/metrics/citation-rate/cumulative": {
+      "post": {
+        "tags": ["Metrics"],
+        "summary": "Cumulative Citation Rate",
+        "description": "Returns citation rate percentages across the specified date range. Shows the percentage of AI responses that cite your brand and competitors as sources.",
+        "operationId": "getCumulativeCitationRate",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CitationRateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with citation rate data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/components/schemas/CumulativeCitationRateEntry"
+                      }
+                    }
+                  },
+                  "required": ["data"]
+                },
+                "example": {
+                  "data": {
+                    "Acme Corp": {
+                      "citation_rate": 28.5,
+                      "is_self": true
+                    },
+                    "Competitor Inc": {
+                      "citation_rate": 15.2,
+                      "is_self": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id: Required"
+                    }
+                  },
+                  "missing_filters": {
+                    "value": {
+                      "error": "filters: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Website not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Website not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metrics/citation-rate/time-series": {
+      "post": {
+        "tags": ["Metrics"],
+        "summary": "Citation Rate Over Time",
+        "description": "Returns daily citation rate breakdown over the specified date range. Each entry contains the date and citation rate percentages for your brand and competitors.",
+        "operationId": "getTimeSeriesCitationRate",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CitationRateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with time series data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TimeSeriesCitationRateEntry"
+                      }
+                    }
+                  },
+                  "required": ["data"]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "date": "2024-06-15",
+                      "metrics": {
+                        "Acme Corp": {
+                          "citation_rate": 28.5,
+                          "is_self": true
+                        },
+                        "Competitor Inc": {
+                          "citation_rate": 15.2,
+                          "is_self": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id: Required"
+                    }
+                  },
+                  "missing_filters": {
+                    "value": {
+                      "error": "filters: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Website not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Website not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1808,6 +2061,68 @@
                 "mention_rate": {
                   "type": "number",
                   "description": "Absolute mention rate percentage for this day"
+                },
+                "is_self": {
+                  "type": "boolean",
+                  "description": "True if this is your tracked website"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CitationRateRequest": {
+        "type": "object",
+        "description": "Request body for citation rate endpoints",
+        "required": ["website_id", "filters"],
+        "properties": {
+          "website_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the website to query citation rates for",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ApiFilters"
+          }
+        }
+      },
+      "CumulativeCitationRateEntry": {
+        "type": "object",
+        "description": "Citation rate data for a brand or competitor",
+        "properties": {
+          "citation_rate": {
+            "type": "number",
+            "description": "Citation rate percentage (0-100)",
+            "example": 28.5
+          },
+          "is_self": {
+            "type": "boolean",
+            "description": "True if this entry represents your tracked website",
+            "example": true
+          }
+        }
+      },
+      "TimeSeriesCitationRateEntry": {
+        "type": "object",
+        "description": "Daily citation rate data point",
+        "required": ["date", "metrics"],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date in YYYY-MM-DD format",
+            "example": "2024-06-15"
+          },
+          "metrics": {
+            "type": "object",
+            "description": "Company names as keys with citation rate data as values",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "citation_rate": {
+                  "type": "number",
+                  "description": "Citation rate percentage for this day"
                 },
                 "is_self": {
                   "type": "boolean",
