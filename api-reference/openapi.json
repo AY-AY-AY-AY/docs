@@ -33,6 +33,87 @@
     }
   ],
   "paths": {
+    "/api/validate-api-key": {
+      "get": {
+        "tags": ["Basics"],
+        "summary": "Validate API Key",
+        "description": "Validates an API key.",
+        "operationId": "validateApiKey",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "API key validation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "valid": {
+                      "type": "boolean",
+                      "description": "Whether the API key is valid"
+                    }
+                  },
+                  "required": ["valid"]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "headers": {
+              "x-rate-limit-limit": {
+                "description": "The rate limit ceiling for the endpoint",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "x-rate-limit-remaining": {
+                "description": "The number of requests remaining in the current rate limit window",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "x-rate-limit-reset": {
+                "description": "The time at which the rate limit resets (Unix timestamp)",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "retry-after": {
+                "description": "The number of seconds to wait before retrying",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Rate limit exceeded"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/websites": {
       "get": {
         "tags": ["Basics"],

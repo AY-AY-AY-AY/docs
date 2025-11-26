@@ -27,6 +27,7 @@
           {
             "group": "Basics",
             "pages": [
+              "GET /api/validate-api-key",
               "GET /api/v1/websites",
               "GET /api/v1/prompts",
               "GET /api/v1/competitors",
