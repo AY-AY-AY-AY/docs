@@ -785,7 +785,7 @@
     "/api/v1/metrics/position/cumulative": {
       "post": {
         "tags": ["Metrics"],
-        "summary": "Get Cumulative Position",
+        "summary": "Cumulative Position",
         "description": "Returns average position/ranking across the specified date range. Shows where your brand and competitors typically appear in AI responses.",
         "operationId": "getCumulativePosition",
         "security": [
@@ -909,7 +909,7 @@
     "/api/v1/metrics/position/time-series": {
       "post": {
         "tags": ["Metrics"],
-        "summary": "Get Position Time Series",
+        "summary": "Position Over Time",
         "description": "Returns daily position/ranking breakdown over the specified date range. Each entry contains position metrics for your brand and competitors.",
         "operationId": "getTimeSeriesPosition",
         "security": [
@@ -956,6 +956,259 @@
                         "percentile_ranking": 72.3,
                         "avg_position": 3.2,
                         "is_self": false
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id: Required"
+                    }
+                  },
+                  "missing_filters": {
+                    "value": {
+                      "error": "filters: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Website not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Website not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metrics/mention-rate/cumulative": {
+      "post": {
+        "tags": ["Metrics"],
+        "summary": "Cumulative Mention Rate",
+        "description": "Returns absolute mention rate percentages across the specified date range. Shows the percentage of AI responses that mention your brand and competitors.",
+        "operationId": "getCumulativeMentionRate",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MentionRateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with mention rate data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/components/schemas/CumulativeMentionRateEntry"
+                      }
+                    }
+                  },
+                  "required": ["data"]
+                },
+                "example": {
+                  "data": {
+                    "Acme Corp": {
+                      "mention_rate": 45.5,
+                      "is_self": true
+                    },
+                    "Competitor Inc": {
+                      "mention_rate": 32.1,
+                      "is_self": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id: Required"
+                    }
+                  },
+                  "missing_filters": {
+                    "value": {
+                      "error": "filters: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Website not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Website not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metrics/mention-rate/time-series": {
+      "post": {
+        "tags": ["Metrics"],
+        "summary": "Mention Rate Over Time",
+        "description": "Returns daily absolute mention rate breakdown over the specified date range. Each entry contains the date and mention rate percentages for your brand and competitors.",
+        "operationId": "getTimeSeriesMentionRate",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MentionRateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with time series data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TimeSeriesMentionRateEntry"
+                      }
+                    }
+                  },
+                  "required": ["data"]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "date": "2024-06-15",
+                      "metrics": {
+                        "Acme Corp": {
+                          "mention_rate": 45.5,
+                          "is_self": true
+                        },
+                        "Competitor Inc": {
+                          "mention_rate": 32.1,
+                          "is_self": false
+                        }
                       }
                     }
                   ]
@@ -1499,6 +1752,68 @@
             "is_self": {
               "type": "boolean",
               "description": "True if this is your tracked website"
+            }
+          }
+        }
+      },
+      "MentionRateRequest": {
+        "type": "object",
+        "description": "Request body for mention rate endpoints",
+        "required": ["website_id", "filters"],
+        "properties": {
+          "website_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the website to query mention rates for",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ApiFilters"
+          }
+        }
+      },
+      "CumulativeMentionRateEntry": {
+        "type": "object",
+        "description": "Absolute mention rate data for a brand or competitor",
+        "properties": {
+          "mention_rate": {
+            "type": "number",
+            "description": "Absolute mention rate percentage (0-100)",
+            "example": 45.5
+          },
+          "is_self": {
+            "type": "boolean",
+            "description": "True if this entry represents your tracked website",
+            "example": true
+          }
+        }
+      },
+      "TimeSeriesMentionRateEntry": {
+        "type": "object",
+        "description": "Daily mention rate data point",
+        "required": ["date", "metrics"],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date in YYYY-MM-DD format",
+            "example": "2024-06-15"
+          },
+          "metrics": {
+            "type": "object",
+            "description": "Company names as keys with mention rate data as values",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "mention_rate": {
+                  "type": "number",
+                  "description": "Absolute mention rate percentage for this day"
+                },
+                "is_self": {
+                  "type": "boolean",
+                  "description": "True if this is your tracked website"
+                }
+              }
             }
           }
         }

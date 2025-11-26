@@ -50,6 +50,13 @@
                   "POST /api/v1/metrics/position/cumulative",
                   "POST /api/v1/metrics/position/time-series"
                 ]
+              },
+              {
+                "group": "Mention Rate",
+                "pages": [
+                  "POST /api/v1/metrics/mention-rate/cumulative",
+                  "POST /api/v1/metrics/mention-rate/time-series"
+                ]
               }
             ]
           }
