@@ -781,6 +781,258 @@
           }
         }
       }
+    },
+    "/api/v1/metrics/position/cumulative": {
+      "post": {
+        "tags": ["Metrics"],
+        "summary": "Get Cumulative Position",
+        "description": "Returns average position/ranking across the specified date range. Shows where your brand and competitors typically appear in AI responses.",
+        "operationId": "getCumulativePosition",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PositionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with position data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/components/schemas/CumulativePositionEntry"
+                      }
+                    }
+                  },
+                  "required": ["data"]
+                },
+                "example": {
+                  "data": {
+                    "Acme Corp": {
+                      "avg_position": 2.5,
+                      "is_self": true
+                    },
+                    "Competitor Inc": {
+                      "avg_position": 3.2,
+                      "is_self": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id: Required"
+                    }
+                  },
+                  "missing_filters": {
+                    "value": {
+                      "error": "filters: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Website not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Website not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metrics/position/time-series": {
+      "post": {
+        "tags": ["Metrics"],
+        "summary": "Get Position Time Series",
+        "description": "Returns daily position/ranking breakdown over the specified date range. Each entry contains position metrics for your brand and competitors.",
+        "operationId": "getTimeSeriesPosition",
+        "security": [
+          {
+            "apiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PositionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with time series data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TimeSeriesPositionEntry"
+                      }
+                    }
+                  },
+                  "required": ["data"]
+                },
+                "example": {
+                  "data": [
+                    {
+                      "Acme Corp": {
+                        "percentile_ranking": 85.5,
+                        "avg_position": 2.5,
+                        "is_self": true
+                      },
+                      "Competitor Inc": {
+                        "percentile_ranking": 72.3,
+                        "avg_position": 3.2,
+                        "is_self": false
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "missing_website_id": {
+                    "value": {
+                      "error": "website_id: Required"
+                    }
+                  },
+                  "missing_filters": {
+                    "value": {
+                      "error": "filters: Required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - You don't have access to this website",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Unauthorized access to this website"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Website not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "error": "Website not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1194,6 +1446,60 @@
           },
           "filters": {
             "$ref": "#/components/schemas/ApiFilters"
+          }
+        }
+      },
+      "PositionRequest": {
+        "type": "object",
+        "description": "Request body for position endpoints",
+        "required": ["website_id", "filters"],
+        "properties": {
+          "website_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the website to query position metrics for",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ApiFilters"
+          }
+        }
+      },
+      "CumulativePositionEntry": {
+        "type": "object",
+        "description": "Position data for a brand or competitor",
+        "properties": {
+          "avg_position": {
+            "type": "number",
+            "description": "Average position/rank in AI responses",
+            "example": 2.5
+          },
+          "is_self": {
+            "type": "boolean",
+            "description": "True if this entry represents your tracked website",
+            "example": true
+          }
+        }
+      },
+      "TimeSeriesPositionEntry": {
+        "type": "object",
+        "description": "Daily position data point",
+        "additionalProperties": {
+          "type": "object",
+          "description": "Company name as key with position data as value",
+          "properties": {
+            "percentile_ranking": {
+              "type": "number",
+              "description": "Percentile ranking for this day"
+            },
+            "avg_position": {
+              "type": "number",
+              "description": "Average position for this day"
+            },
+            "is_self": {
+              "type": "boolean",
+              "description": "True if this is your tracked website"
+            }
           }
         }
       }

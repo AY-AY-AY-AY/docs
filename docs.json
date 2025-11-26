@@ -43,6 +43,13 @@
                   "POST /api/v1/metrics/share-of-voice/cumulative",
                   "POST /api/v1/metrics/share-of-voice/time-series"
                 ]
+              },
+              {
+                "group": "Position",
+                "pages": [
+                  "POST /api/v1/metrics/position/cumulative",
+                  "POST /api/v1/metrics/position/time-series"
+                ]
               }
             ]
           }
