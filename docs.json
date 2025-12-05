@@ -25,6 +25,12 @@
             ]
           },
           {
+            "group": "Integrations",
+            "pages": [
+              "api-reference/looker-studio"
+            ]
+          },
+          {
             "group": "Basics",
             "pages": [
               "GET /api/validate-api-key",
