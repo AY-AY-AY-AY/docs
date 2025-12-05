@@ -3,3 +3,64 @@ title: 'Looker Studio'
 description: 'Integrate AthenaHQ with Looker Studio'
 icon: 'chart-line'
 ---
+
+## Setup
+
+<Steps>
+  <Step title="Create an API Key">
+    Go to the [API Keys page](https://app.athenahq.ai/organization?tab=api) in your AthenaHQ dashboard.
+
+    Select which websites to attach to the key, click create, and save the key securely.
+
+    <Card
+      title="Manage API Keys"
+      icon="key"
+      href="https://app.athenahq.ai/organization?tab=api"
+    >
+      Create and manage API keys in your organization settings
+    </Card>
+  </Step>
+
+  <Step title="Add Data Source in Looker Studio">
+    1. Add a new data source in a Report or the data sources section
+    2. Search for and select "Build Your Own" under "Partner Connectors"
+    3. Paste the Deployment ID (found in the API tab of your AthenaHQ dashboard)
+    4. Follow authorization prompts and paste your API key
+  </Step>
+
+  <Step title="Configure the Connector">
+    Configure the following options:
+
+    | Option | Default | Description |
+    |--------|---------|-------------|
+    | Website | Required | The website to pull data from |
+    | Models | All | Filter by LLM models |
+    | Prompt type | All | Filter by prompt type |
+    | Prompt status | All | Filter by status (recommended: Active) |
+    | Prompts | All | Filter by specific prompts |
+    | Competitors | All | Filter by specific competitors |
+  </Step>
+</Steps>
+
+## Usage
+
+Once connected, you can build reports using the following dimensions and metrics.
+
+### Dimensions
+
+| Field | Type | Description |
+|-------|------|-------------|
+| Date | Date | The date of the data |
+| Company Name | Text | The name of the company |
+| Model | Text | The LLM model (ChatGPT, Perplexity, etc.) |
+| Is Own Brand | Boolean | Whether the company is your brand |
+
+### Metrics
+
+| Field | Type | Aggregation | Description |
+|-------|------|-------------|-------------|
+| Share of Voice | Number | Average | Share of voice percentage |
+| Mention Rate | Number | Average | Mention rate percentage |
+| Citation Rate | Number | Average | Citation rate percentage |
+| Position | Number | Average | Average position in LLM responses |
+
